@@ -6,59 +6,81 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody body;
 
+    public Vector3 newPosition;
+
     [SerializeField]
     private Animator thrusterAnimator;
 
     private float moveDistance = 1f;
+    private float moveSpeed = 6f;
+
+    private Quaternion newRotation;
+    
+    private bool isThrusting = false;
 
 
     private void Start()
     {
         body = GetComponent<Rigidbody>();
-        GameManager.Instance.startedLevel = true;
     }
 
     private void Update()
     {
-        bool isThrusting = Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.S);
-
-        if (Input.GetKeyDown(KeyCode.A) && GameManager.Instance.isOnBeat == true)
+        if (Input.GetKeyDown(KeyCode.A) && GameManager.Instance.isOnBeat && !GameManager.Instance.pressedOnceOnBeat)
         {
+            isThrusting = true;
+            GameManager.Instance.pressedOnceOnBeat = true;
+
             // movement player left
-            body.rotation = Quaternion.Euler(0, -90, 0);
-            body.position = new Vector3(body.position.x - moveDistance, body.position.y, body.position.z);
+            newRotation = Quaternion.Euler(0, -90, 0);
+            newPosition = new Vector3(body.position.x - moveDistance, body.position.y, body.position.z);
 
             GameManager.Instance.CheckScore();
         }
-        if (Input.GetKeyDown(KeyCode.D) && GameManager.Instance.isOnBeat == true)
+        else if (Input.GetKeyDown(KeyCode.D) && GameManager.Instance.isOnBeat && !GameManager.Instance.pressedOnceOnBeat)
         {
+            isThrusting = true;
+            GameManager.Instance.pressedOnceOnBeat = true;
+
             // movement player right
-            body.rotation = Quaternion.Euler(0, 90, 0);
-            body.position = new Vector3(body.position.x + moveDistance, body.position.y, body.position.z);
+            newRotation = Quaternion.Euler(0, 90, 0);
+            newPosition = new Vector3(body.position.x + moveDistance, body.position.y, body.position.z);
 
             GameManager.Instance.CheckScore();
         }
-            
-        if (Input.GetKeyDown(KeyCode.W) && GameManager.Instance.isOnBeat == true)
+        else if (Input.GetKeyDown(KeyCode.W) && GameManager.Instance.isOnBeat && !GameManager.Instance.pressedOnceOnBeat)
         {
+            isThrusting = true;
+            GameManager.Instance.pressedOnceOnBeat = true;
+
             // movement player up
-            body.rotation = Quaternion.Euler(0, 0, 0);
-            body.position = new Vector3(body.position.x, body.position.y, body.position.z + moveDistance);
+            newRotation = Quaternion.Euler(0, 0, 0);
+            newPosition = new Vector3(body.position.x, body.position.y, body.position.z + moveDistance);
 
             GameManager.Instance.CheckScore();
         }
-            
-        if (Input.GetKeyDown(KeyCode.S) && GameManager.Instance.isOnBeat == true)
+        else if (Input.GetKeyDown(KeyCode.S) && GameManager.Instance.isOnBeat && !GameManager.Instance.pressedOnceOnBeat)
         {
+            isThrusting = true;
+            GameManager.Instance.pressedOnceOnBeat = true;
+
             // movement player down
-            body.rotation = Quaternion.Euler(0, -180, 0);
-            body.position = new Vector3(body.position.x, body.position.y, body.position.z - moveDistance);
+            newRotation = Quaternion.Euler(0, -180, 0);
+            newPosition = new Vector3(body.position.x, body.position.y, body.position.z - moveDistance);
 
             GameManager.Instance.CheckScore();
         }
-            
+        else
+        {
+            isThrusting = false;
+        }
+
+
+        body.rotation = Quaternion.Lerp(body.rotation, newRotation, Time.deltaTime * moveSpeed);
+        body.position = Vector3.Lerp(body.position, newPosition, Time.deltaTime * moveSpeed);
 
         if (thrusterAnimator != null)
             thrusterAnimator.SetBool("Thrusting", isThrusting);
     }
+
 }

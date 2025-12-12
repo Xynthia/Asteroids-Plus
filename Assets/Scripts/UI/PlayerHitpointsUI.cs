@@ -11,7 +11,7 @@ public class PlayerHitpointsUI : MonoBehaviour
     {
         // cache components
         textMesh = GetComponent<TextMeshProUGUI>();
-        playerHitPoints = GameManager.Instance.Player.GetComponent<HitPoints>();
+        playerHitPoints = GameManager.Instance.player.GetComponent<HitPoints>();
     }
     private void Update()
     {

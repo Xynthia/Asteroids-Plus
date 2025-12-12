@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -12,26 +13,41 @@ public class GameManager : MonoBehaviour
 
     public static int finalScore = 0;
 
-    [SerializeField]
-    private TextMeshProUGUI scoreTextObject = null; 
+    
+    public TextMeshProUGUI scoreTextObject = null; 
 
     private int score = 0;
 
-    [SerializeField]
-    private GameObject player = null;
-    public GameObject Player { get { return player; } }
+    public TextMeshProUGUI visualScoreOnBeat;
 
-    [SerializeField]
-    private AudioSource bgAudioSource;
+    public GameObject player;
+    public PlayerMovement playerMovement;
+
+    public bool playerIsWrappingInScreen = false;
+
 
     public bool startedLevel = false;
-    private float songTimer = 0f;
 
-    public bool isOnBeat;
-    public float safeTime = 0f;
+    public float volume = 1.0f;
 
-    private float safeTimer = 0f;
-    private bool startTimer = false;
+    public bool isOnBeat = false;
+    public bool pressedOnceOnBeat = false;
+
+    private float visualScoreTimer = 0f;
+    private float visualScoreTime = 2f;
+
+    private bool doThisOnce = true;
+
+    private enum visualScoreName
+    {
+        Early = 1,
+        Good = 2,
+        Perfect = 3,
+        Almost = 4,
+        Late = 5
+    }
+
+
 
     private void Awake()
     {
@@ -40,34 +56,53 @@ public class GameManager : MonoBehaviour
             Destroy(instance.gameObject);
         instance = this;
 
+        DontDestroyOnLoad(instance);
     }
 
     private void Update()
     {
-        // the time from start of beat to the safe margin of being on beat will set is on beat.
-        if (isOnBeat == true)
+        if (doThisOnce && startedLevel && RhythmManager.Instance != null)
         {
-            safeTimer += Time.deltaTime;
+            Debug.Log(volume);
+            RhythmManager.Instance.changeVolume(volume);
+            doThisOnce = false;
+        }
 
-            if (safeTimer > safeTime)
+        if (RhythmManager.Instance != null && startedLevel == true)
+        {
+            if (RhythmManager.Instance.timePositionMs >= RhythmManager.Instance.lengthOfSongMs)
             {
-                safeTimer = safeTimer - safeTime;
-                isOnBeat = false;
+                GameManager.Instance.startedLevel = false;
+                GameManager.Instance.NotifyPlayerWon();
             }
-        }
 
-        // will start timer at start of level and at end will show the end screen.
-        if (startedLevel == true)
-            songTimer += Time.deltaTime;
-        
-        if (songTimer >= bgAudioSource.clip.length)
-        {
-            startedLevel = false;
-            NotifyPlayerDeath();
+            if (!isOnBeat)
+            {
+                pressedOnceOnBeat = false;
+            }
+
+            setOnActiveBeat();
+
+            //update visual score with player if timer ran out then not active, if pressed on active beat visual score is active
+
+            visualScoreOnBeat.transform.parent.transform.position = player.transform.position;
+
+            if (visualScoreOnBeat.gameObject.activeSelf)
+            {
+                visualScoreTimer += Time.deltaTime;
+            }
+
+            if (visualScoreTimer >= visualScoreTime)
+            {
+                visualScoreTimer -= visualScoreTime;
+                visualScoreOnBeat.gameObject.SetActive(false);
+            }
+
+            if (pressedOnceOnBeat)
+                visualScoreOnBeat.gameObject.SetActive(true);
+
         }
-            
     }
-
 
     public void NotifyPlayerDeath()
     {
@@ -76,6 +111,12 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("GameOver");
     }
 
+    public void NotifyPlayerWon()
+    {
+        // save final score then go to game over screen
+        finalScore = score;
+        SceneManager.LoadScene("GameWon");
+    }
 
     public void AddScore(int amount)
     {
@@ -89,30 +130,74 @@ public class GameManager : MonoBehaviour
     // add score based on precision
     public void CheckScore()
     {
-        float percentageAfterBeat;
+        float percentageAfterBeat = RhythmManager.Instance.checkPercentagMargin();
 
-        percentageAfterBeat = (100 / safeTime) * safeTimer;
-
-        if (percentageAfterBeat < 10)
-            AddScore(5);
-        else if (percentageAfterBeat < 50) 
-            AddScore(3);
-        else if (percentageAfterBeat < 80)
-            AddScore(2);
-        else if (percentageAfterBeat < 100)
+        if (percentageAfterBeat < 10){
+            setVisualScore(visualScoreName.Early);
             AddScore(1);
+        }
+        else if (percentageAfterBeat < 25){
+            setVisualScore(visualScoreName.Early);
+            AddScore(2);
+        }
+        else if (percentageAfterBeat < 45){
+            setVisualScore(visualScoreName.Good);
+            AddScore(3);
+        }
+        else if (percentageAfterBeat < 55){
+            setVisualScore(visualScoreName.Perfect);
+            AddScore(5);
+        }
+        else if (percentageAfterBeat < 75){
+            setVisualScore(visualScoreName.Almost);
+            AddScore(3);
+        }
+        else if (percentageAfterBeat < 90){
+            setVisualScore(visualScoreName.Late);
+            AddScore(2);
+        }
+        else if (percentageAfterBeat < 100){
+            setVisualScore(visualScoreName.Late);
+            AddScore(1);
+        }
     }
 
-
-    public void StartTimerOnBeat()
+    private void setVisualScore(visualScoreName visualScore)
     {
-        isOnBeat = true;
-
+        switch (visualScore)
+        {
+            case visualScoreName.Early:
+                visualScoreOnBeat.text = "Early";
+                visualScoreOnBeat.color = Color.orange;
+                break;
+            case visualScoreName.Good:
+                visualScoreOnBeat.text = "Good";
+                visualScoreOnBeat.color = Color.green;
+                break;
+            case visualScoreName.Perfect:
+                visualScoreOnBeat.text = "Perfect";
+                visualScoreOnBeat.color = Color.gold;
+                break;
+            case visualScoreName.Almost:
+                visualScoreOnBeat.text = "Almost";
+                visualScoreOnBeat.color = Color.yellow;
+                break;
+            case visualScoreName.Late:
+                visualScoreOnBeat.text = "Late";
+                visualScoreOnBeat.color = Color.red;
+                break;
+        }
     }
 
-    public void startLevel()
+    private void setOnActiveBeat()
     {
-        
+        if (RhythmManager.Instance.activeBeat != -1)
+        {
+            isOnBeat = true;
+        }
+        else
+        {
+            isOnBeat = false;
+        }
     }
-
 }

@@ -5,7 +5,9 @@ public class WrapObjectInScreen : MonoBehaviour
 {
     private SphereCollider sphereCollider;
 
-    private float wrappingMargin = 0f;
+    private float wrappingMargin = 1f;
+
+    private bool atEdgeOfScreen = false;
 
     private void Start()
     {
@@ -34,27 +36,43 @@ public class WrapObjectInScreen : MonoBehaviour
         {
             // wrap to left
             newScreenPos.x = 0;
+            newPositionOffset.x -= sphereCollider.radius;
+            atEdgeOfScreen = true;
         }
         else if (leftEdgeScreenPos.x < 0 - wrappingMargin)
         {
             // wrap to right
             newScreenPos.x = Screen.width;
+            newPositionOffset.x += sphereCollider.radius;
+            atEdgeOfScreen = true;
         }
-
-        if (topEdgeScreenPos.y > Screen.height + wrappingMargin)
+        else if (topEdgeScreenPos.y > Screen.height + wrappingMargin)
         {
             // wrap to bottom
             newScreenPos.y = 0;
+            newPositionOffset.z -= sphereCollider.radius;
+            atEdgeOfScreen = true;
         }
         else if (bottomEdgeScreenPos.y < 0 - wrappingMargin)
         {
             // wrap to top
             newScreenPos.y = Screen.height;
+            newPositionOffset.z += sphereCollider.radius;
+            atEdgeOfScreen = true;
+        }
+        else
+        {
+            atEdgeOfScreen = false;
         }
 
         // calculate final position and set object to new position
         Vector3 newPosition = Camera.main.ScreenToWorldPoint(newScreenPos) + newPositionOffset;
+        if (transform.CompareTag("Player") && atEdgeOfScreen)
+        {
+            GameManager.Instance.playerMovement.newPosition = newPosition;
+        }
+       
         transform.position = newPosition;
-
+        
     }
 }

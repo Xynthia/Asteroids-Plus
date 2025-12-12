@@ -17,13 +17,18 @@ public class PlayerGun : MonoBehaviour
 
     private float shootingCooldownTimer = 0.0f;
 
+    private void Start()
+    {
+        shootingCooldown = RhythmManager.Instance.beatDureationMs;
+    }
+
     private void Update()
     {
         // track cooldown between shots
         shootingCooldownTimer -= Time.deltaTime;
 
         // shoot if pressing button and shooting not on cooldown
-        if (Input.GetKey(KeyCode.Space) && shootingCooldownTimer <= 0 && GameManager.Instance.isOnBeat)
+        if (Input.GetKeyDown(KeyCode.Space) && shootingCooldownTimer <= 0 && GameManager.Instance.isOnBeat)
         {
             GameManager.Instance.CheckScore();
             Shoot();

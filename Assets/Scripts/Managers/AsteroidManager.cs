@@ -76,7 +76,7 @@ public class AsteroidManager : MonoBehaviour
         rigidbody.AddForce(direction * forceMagnitude, ForceMode.VelocityChange);
     }
 
-private void ResetTimer()
+    private void ResetTimer()
     {
         asteroidSpawnTimer = Random.Range(minSpawnTime, maxSpawnTime);
     }

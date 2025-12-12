@@ -8,12 +8,31 @@ public class RhythmManager : MonoBehaviour
     private static RhythmManager instance;
     public static RhythmManager Instance { get { return instance; } }
 
-    [SerializeField] private float _bpm;
-    [SerializeField] private AudioSource _audioSource;
-    [SerializeField] private Intervals[] _intervals;
-    [SerializeField] private float percentageSafeTime = 33.3f;
+    [SerializeField] private float bpm;
+    [SerializeField] private AudioSource bgAudioSource;
+    [SerializeField] private float marginPercentage = 33.3f;
 
-    private float safeTime;
+    public float beatDureationMs = 0.0f;
+
+    public float activeBeat = -1f;
+
+    public float lengthOfSongS = 0.0f;
+    public float lengthOfSongMs = 0.0f;
+    public float timePositionMs = 0f;
+
+    public float marginDurationMs = 0.0f;
+    public float marginDurationS = 0.0f;
+    public float marginTimerS = 0.0f;
+
+
+    [SerializeField] UnityEvent onBeatTrigger;
+
+    private float lastBeat = 0f;
+    private float nextBeatPosition = 0f;
+    private float activeBeatStartPosition = 0f;
+    private float activeBeatEndPosition = 0f;
+
+    private bool doThisOnce = true;
 
     private void Awake()
     {
@@ -26,40 +45,74 @@ public class RhythmManager : MonoBehaviour
 
     void Start()
     {
-        safeTime =  _intervals[0].GetIntervalLength(_bpm) * (percentageSafeTime / 100);
-        GameManager.Instance.safeTime = safeTime;
+        lengthOfSongS = bgAudioSource.clip.length;
+        lengthOfSongMs = lengthOfSongS * 1000;
+        
+        beatDureationMs = (60 / bpm) * 1000;
+
+        marginDurationMs = 300;
+        marginDurationS = marginDurationMs / 1000;
+
+        nextBeatPosition = beatDureationMs;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        foreach (Intervals interval in _intervals)
+
+        float position = checkPositionMsSong();
+
+        if (position >= nextBeatPosition)
         {
-            float sampledTime = (_audioSource.timeSamples / (_audioSource.clip.frequency * interval.GetIntervalLength(_bpm)));
-            interval.CheckForNewInterval(sampledTime);
+            lastBeat += 1;
+            nextBeatPosition += beatDureationMs;
+            activeBeatStartPosition = nextBeatPosition - marginDurationMs;
+            activeBeatEndPosition = nextBeatPosition + marginDurationMs;
+        }
+
+        if (position >= activeBeatStartPosition && position <= activeBeatEndPosition)
+        {
+            activeBeat = lastBeat;
+
+            if (doThisOnce)
+            {
+                onBeatTrigger.Invoke();
+                doThisOnce = false;
+            }
+        }
+        else
+        {
+            activeBeat = -1;
+            doThisOnce = true;
         }
     }
 
-}
-
-[System.Serializable]
-public class Intervals
-{
-    [SerializeField] private float _steps;
-    [SerializeField] private UnityEvent _trigger;
-    private int _lastInterval;
-
-    public float GetIntervalLength(float bpm)
+    public float checkPositionMsSong()
     {
-        return 60f / (bpm * _steps);
+        return timePositionMs = bgAudioSource.time * 1000;
     }
 
-    public void CheckForNewInterval(float interval)
+    public float checkPercentagMargin()
     {
-        if (Mathf.FloorToInt(interval) != _lastInterval)
-        {
-            _lastInterval = Mathf.FloorToInt(interval);
-            _trigger.Invoke();
-        }
+        float currentMarginTime = timePositionMs - activeBeatStartPosition;
+        return currentMarginTime / marginDurationMs * 100;
     }
+
+    public void unPause()
+    {
+        bgAudioSource.UnPause();
+    }
+
+    public void pause()
+    {
+        bgAudioSource.Pause();
+    }
+
+    public void changeVolume(float volume)
+    {
+        bgAudioSource.volume = volume;
+    }
+
+    
 }

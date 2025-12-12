@@ -51,6 +51,7 @@ public class HitPoints : MonoBehaviour
         // take damage when colliding with objects in layer mask
         if (LayerHelper.IsInLayerMask(collision.gameObject,layerMask))
             TakeDamage();
+        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -67,6 +68,8 @@ public class HitPoints : MonoBehaviour
             return;
 
         currentHitpoints--;
+
+        
 
         // instantiate new object when hit (usually for VFX)
         if (objectToSpawnWhenDamaged != null)
@@ -115,4 +118,5 @@ public class HitPoints : MonoBehaviour
 
         Destroy(gameObject);
     }
+
 }

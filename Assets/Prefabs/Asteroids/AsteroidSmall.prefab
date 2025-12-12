@@ -158,8 +158,8 @@ Rigidbody:
   m_GameObject: {fileID: 6689194817083154363}
   serializedVersion: 5
   m_Mass: 0.3
-  m_LinearDamping: 0.1
-  m_AngularDamping: 0.05
+  m_LinearDamping: 0.01
+  m_AngularDamping: 0.01
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -218,6 +218,9 @@ MonoBehaviour:
     m_Bits: 320
   objectToSpawnWhenDamaged: {fileID: 4619301477547320369, guid: 2e78c0f79492eec4f938d761d56864fb, type: 3}
   objectToSpawnOnDeath: {fileID: 0}
+  movementOnHit: 0
+  minForceMagnitude: 0.5
+  maxForceMagnitude: 1
   invulnerabilityTimeAfterDamage: 0
   onInvulnerabilityEnabled:
     m_PersistentCalls:
