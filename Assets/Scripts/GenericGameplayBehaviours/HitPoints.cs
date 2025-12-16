@@ -69,6 +69,10 @@ public class HitPoints : MonoBehaviour
 
         currentHitpoints--;
 
+        if (gameObject.tag == "Player")
+        {
+            AudioManager.Instance.playSFX(AudioManager.Instance.hitAudio);
+        }
         
 
         // instantiate new object when hit (usually for VFX)

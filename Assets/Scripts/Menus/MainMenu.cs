@@ -7,19 +7,43 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] GameObject mainMenu;
     [SerializeField] GameObject optionsMenu;
+    [SerializeField] GameObject songSelectMenu;
     [SerializeField] Slider soundSlider;
     [SerializeField] AudioSource audioSource;
 
-   
-    public void startGame()
+    
+
+    private void startGame()
     {
         GameManager.Instance.startedLevel = true;
         SceneManager.LoadScene("Level1");
     }
 
-    public void quitGame()
+    public void deathStar()
     {
-        Application.Quit();
+        AudioManager.Instance.bgAudio = AudioManager.Instance.deathStar;
+        AudioManager.Instance.bpm = 90;
+        startGame();
+    }
+
+    public void inOrbit()
+    {
+        AudioManager.Instance.bgAudio = AudioManager.Instance.inOrbit;
+        AudioManager.Instance.bpm = 92;
+        startGame();
+    }
+
+    public void hittingTheAtmosphere()
+    {
+        AudioManager.Instance.bgAudio = AudioManager.Instance.hittingTheAtmosphere;
+        AudioManager.Instance.bpm = 125;
+        startGame();
+    }
+
+    public void songSelect()
+    {
+        songSelectMenu.SetActive(true);
+        mainMenu.SetActive(false);
     }
 
     public void options()
@@ -28,18 +52,24 @@ public class MainMenu : MonoBehaviour
         optionsMenu.SetActive(true);
     }
 
-    public void back()
-    {
-        mainMenu.SetActive(true);
-        optionsMenu.SetActive(false);
-    }
-
     public void changedVolume()
     {
         float volume = soundSlider.value / 100;
         GameManager.Instance.volume = volume;
         audioSource.volume = volume;
         StartCoroutine(playClip());
+    }
+
+    public void quitGame()
+    {
+        Application.Quit();
+    }
+
+    public void back()
+    {
+        mainMenu.SetActive(true);
+        optionsMenu.SetActive(false);
+        songSelectMenu.SetActive(false);
     }
 
     IEnumerator playClip()

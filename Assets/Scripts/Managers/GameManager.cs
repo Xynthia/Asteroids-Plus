@@ -33,10 +33,13 @@ public class GameManager : MonoBehaviour
     public bool isOnBeat = false;
     public bool pressedOnceOnBeat = false;
 
-    private float visualScoreTimer = 0f;
-    private float visualScoreTime = 2f;
 
     private bool doThisOnce = true;
+
+
+    private float visualScoreTimer = 0f;
+    private float visualScoreTime = 2f;
+    private bool visualScoreOn = false;
 
     private enum visualScoreName
     {
@@ -61,16 +64,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (doThisOnce && startedLevel && RhythmManager.Instance != null)
-        {
-            Debug.Log(volume);
-            RhythmManager.Instance.changeVolume(volume);
-            doThisOnce = false;
-        }
-
         if (RhythmManager.Instance != null && startedLevel == true)
         {
-            if (RhythmManager.Instance.timePositionMs >= RhythmManager.Instance.lengthOfSongMs)
+            if (RhythmManager.Instance.sampleTimeS >= RhythmManager.Instance.lengthOfSongS)
             {
                 GameManager.Instance.startedLevel = false;
                 GameManager.Instance.NotifyPlayerWon();
@@ -81,13 +77,11 @@ public class GameManager : MonoBehaviour
                 pressedOnceOnBeat = false;
             }
 
-            setOnActiveBeat();
 
-            //update visual score with player if timer ran out then not active, if pressed on active beat visual score is active
-
+            // visual score follows player goes off after visualscoretime.
             visualScoreOnBeat.transform.parent.transform.position = player.transform.position;
 
-            if (visualScoreOnBeat.gameObject.activeSelf)
+            if (visualScoreOn)
             {
                 visualScoreTimer += Time.deltaTime;
             }
@@ -95,12 +89,8 @@ public class GameManager : MonoBehaviour
             if (visualScoreTimer >= visualScoreTime)
             {
                 visualScoreTimer -= visualScoreTime;
-                visualScoreOnBeat.gameObject.SetActive(false);
+                scoreTextObject.gameObject.SetActive(false);
             }
-
-            if (pressedOnceOnBeat)
-                visualScoreOnBeat.gameObject.SetActive(true);
-
         }
     }
 
@@ -125,6 +115,13 @@ public class GameManager : MonoBehaviour
 
         if (scoreTextObject != null)
             scoreTextObject.text = "Score: " + score.ToString();
+    }
+
+    public void playerPressedButton()
+    {
+        pressedOnceOnBeat = true;
+
+        CheckScore();
     }
 
     // add score based on precision
@@ -187,17 +184,7 @@ public class GameManager : MonoBehaviour
                 visualScoreOnBeat.color = Color.red;
                 break;
         }
-    }
 
-    private void setOnActiveBeat()
-    {
-        if (RhythmManager.Instance.activeBeat != -1)
-        {
-            isOnBeat = true;
-        }
-        else
-        {
-            isOnBeat = false;
-        }
+        visualScoreOnBeat.gameObject.SetActive(true);
     }
 }

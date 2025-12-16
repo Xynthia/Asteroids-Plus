@@ -1,38 +1,19 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RhythmCircleManager: MonoBehaviour
 {
-    [SerializeField] private GameObject circleVisual;
-    [SerializeField] private float maxSize = 1f;
-    private Vector3 minSize;
+    private static RhythmCircleManager instance;
+    public static RhythmCircleManager Instance { get { return instance; } }
 
-    private float timeToScale = 0.0f;
+    [SerializeField] private GameObject circlePrefab;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void spawn()
     {
-        minSize = transform.localScale;
-        timeToScale = RhythmManager.Instance.marginDurationS / 2;
-        print(timeToScale + " " + Time.deltaTime);
+            GameObject circle = Instantiate(circlePrefab, transform.position, Quaternion.identity, transform);
+            circle.transform.Rotate(90, 0, 0);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        transform.localScale = Vector3.Lerp(transform.localScale, minSize, timeToScale);
-
-        if (GameManager.Instance.isOnBeat)
-        {
-            circleVisual.SetActive(true);
-        }
-        else
-        {
-            circleVisual.SetActive(false);
-        }
-    }
-
-    public void setMaxSize()
-    {
-        transform.localScale = minSize * maxSize;
-    }
+    
 }

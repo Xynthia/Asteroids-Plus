@@ -11,7 +11,8 @@ public class PauseMenu : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        pauseMenuUI.SetActive(false);
+        if (pauseMenuUI.activeSelf)
+            pauseMenuUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -35,7 +36,7 @@ public class PauseMenu : MonoBehaviour
     {
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
-        RhythmManager.Instance.unPause();
+        AudioManager.Instance.unPause();
         gameIsPaused = false;
     }
 
@@ -43,7 +44,7 @@ public class PauseMenu : MonoBehaviour
     {
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
-        RhythmManager.Instance.pause();
+        AudioManager.Instance.pause();
         gameIsPaused = true;
     }
 
