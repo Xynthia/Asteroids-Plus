@@ -51,6 +51,7 @@ public class PauseMenu : MonoBehaviour
     public void mainMenu()
     {
         resumeGame();
+        GameManager.Instance.skipToSongSelect = true;
         SceneManager.LoadScene("MainMenu");
     }
 }

@@ -15,17 +15,17 @@ public class AudioManager : MonoBehaviour
     [SerializeField] public float bpm;
     [SerializeField] public AudioClip bgAudio;
 
-    public List<int> songsBpm;
 
-    public AudioClip deathStar;
-    public AudioClip inOrbit;
-    public AudioClip hittingTheAtmosphere;
+    public float volume = 0.5f;
+
+    [SerializeField] public List<SongData> songs;
+
+    public SongData deathStar;
+    public SongData inOrbit;
+    public SongData hittingTheAtmosphere;
 
     public AudioClip hitAudio;
     public AudioClip shootAudio;
-
-    [SerializeField] public AudioClip saveSong;
-    [SerializeField] public float saveBpm;
 
     private bool doThisOnce = true;
 
@@ -33,11 +33,35 @@ public class AudioManager : MonoBehaviour
     {
         // setup singleton
         if (instance != null)
+        {
             Destroy(instance.gameObject);
-        instance = this;
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(instance);
+        }
 
+    }
 
-        DontDestroyOnLoad(instance);
+    private void Start()
+    {
+        foreach(SongData song in songs)
+        {
+            if (song.name == "Death Star")
+            {
+                deathStar = song;
+            }
+            if (song.name == "In Orbit")
+            {
+                inOrbit = song;
+            }
+            if (song.name == "Hitting the Atmosphere")
+            {
+                hittingTheAtmosphere = song;
+            }
+            
+        }
     }
 
     void Update()
@@ -48,7 +72,7 @@ public class AudioManager : MonoBehaviour
             RhythmManager.Instance.lengthOfSongS = BGAudioSource.clip.length;
             RhythmManager.Instance.bpm = bpm;
 
-            changeVolume(GameManager.Instance.volume);
+            changeVolume(volume);
 
             BGAudioSource.Play();
 
@@ -75,8 +99,18 @@ public class AudioManager : MonoBehaviour
     public void changeVolume(float volume)
     {
         BGAudioSource.volume = volume;
+        SFXAudioSource.volume = volume;
     }
 
 
 }
 
+[System.Serializable]
+public class SongData
+{
+    public string name;
+    public AudioClip song;
+    public float bpm;
+    public float notesInBeat;
+    public float marginDurationMs;
+}

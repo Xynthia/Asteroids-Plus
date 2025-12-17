@@ -4,23 +4,21 @@ using UnityEngine.SceneManagement;
 
 public class GameOverMenu : MonoBehaviour
 {
-    [SerializeField]
-    private string levelName;
 
     [SerializeField]
     private TextMeshProUGUI scoreText = null;
+    [SerializeField]
+    private TextMeshProUGUI HighScoreText = null;
 
     private void Start()
     {
-        // display final score from previous game
         scoreText.text = "Score: " + GameManager.finalScore.ToString();
+        HighScoreText.text = "High Score: " + HighScoreManager.Instance.highScore.ToString();
     }
 
-    private void Update()
+    public void mainMenu()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SceneManager.LoadScene(levelName);
-        }
+        GameManager.Instance.skipToSongSelect = true;
+        SceneManager.LoadScene("MainMenu");
     }
 }

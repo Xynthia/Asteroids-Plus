@@ -50,6 +50,11 @@ public class AsteroidManager : MonoBehaviour
         }
     }
 
+    public void setMaxAsteroids(int max)
+    {
+        maxAsteroids = max;
+    }
+
     private void SpawnAsteroidOffscreen()
     {
         // instantiate new GO from prefab on position off screen

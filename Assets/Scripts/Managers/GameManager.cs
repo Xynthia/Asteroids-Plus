@@ -14,32 +14,26 @@ public class GameManager : MonoBehaviour
     public static int finalScore = 0;
 
     
-    public TextMeshProUGUI scoreTextObject = null; 
-
-    private int score = 0;
-
+    public TextMeshProUGUI scoreTextObject = null;
     public TextMeshProUGUI visualScoreOnBeat;
+    
+    private int score = 0;
+    private float visualScoreTimer = 0f;
+    private float visualScoreTime = 2f;
+    private bool visualScoreOn = false;
+
 
     public GameObject player;
     public PlayerMovement playerMovement;
-
     public bool playerIsWrappingInScreen = false;
 
 
     public bool startedLevel = false;
-
-    public float volume = 1.0f;
+    public bool skipToSongSelect = false;
 
     public bool isOnBeat = false;
     public bool pressedOnceOnBeat = false;
 
-
-    private bool doThisOnce = true;
-
-
-    private float visualScoreTimer = 0f;
-    private float visualScoreTime = 2f;
-    private bool visualScoreOn = false;
 
     private enum visualScoreName
     {
@@ -56,10 +50,14 @@ public class GameManager : MonoBehaviour
     {
         // setup singleton
         if (instance != null)
+        {
             Destroy(instance.gameObject);
-        instance = this;
-
-        DontDestroyOnLoad(instance);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(instance);
+        }
     }
 
     private void Update()
@@ -79,7 +77,8 @@ public class GameManager : MonoBehaviour
 
 
             // visual score follows player goes off after visualscoretime.
-            visualScoreOnBeat.transform.parent.transform.position = player.transform.position;
+            if (visualScoreOnBeat != null)
+                visualScoreOnBeat.transform.parent.transform.position = player.transform.position;
 
             if (visualScoreOn)
             {
@@ -92,18 +91,22 @@ public class GameManager : MonoBehaviour
                 scoreTextObject.gameObject.SetActive(false);
             }
         }
+
+        Debug.Log(skipToSongSelect);
     }
 
     public void NotifyPlayerDeath()
     {
-        // save final score then go to game over screen
+        visualScoreOnBeat = null;
+        HighScoreManager.Instance.setHighScore(score);
         finalScore = score;
         SceneManager.LoadScene("GameOver");
     }
 
     public void NotifyPlayerWon()
     {
-        // save final score then go to game over screen
+        visualScoreOnBeat = null;
+        HighScoreManager.Instance.setHighScore(score);
         finalScore = score;
         SceneManager.LoadScene("GameWon");
     }
@@ -120,6 +123,8 @@ public class GameManager : MonoBehaviour
     public void playerPressedButton()
     {
         pressedOnceOnBeat = true;
+
+        playerMovement.move();
 
         CheckScore();
     }

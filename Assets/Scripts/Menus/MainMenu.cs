@@ -11,7 +11,15 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Slider soundSlider;
     [SerializeField] AudioSource audioSource;
 
-    
+    private void Update()
+    {
+        
+        if (GameManager.Instance.skipToSongSelect)
+        {
+            songSelect();
+        }
+    }
+
 
     private void startGame()
     {
@@ -21,22 +29,23 @@ public class MainMenu : MonoBehaviour
 
     public void deathStar()
     {
-        AudioManager.Instance.bgAudio = AudioManager.Instance.deathStar;
-        AudioManager.Instance.bpm = 90;
-        startGame();
+        AudioManager.Instance.bgAudio = AudioManager.Instance.deathStar.song;
+
+        GameManager.Instance.startedLevel = true;
+        SceneManager.LoadScene("Tutorial");
     }
 
     public void inOrbit()
     {
-        AudioManager.Instance.bgAudio = AudioManager.Instance.inOrbit;
-        AudioManager.Instance.bpm = 92;
+        AudioManager.Instance.bgAudio = AudioManager.Instance.inOrbit.song;
+        
         startGame();
     }
 
     public void hittingTheAtmosphere()
     {
-        AudioManager.Instance.bgAudio = AudioManager.Instance.hittingTheAtmosphere;
-        AudioManager.Instance.bpm = 125;
+        AudioManager.Instance.bgAudio = AudioManager.Instance.hittingTheAtmosphere.song;
+        
         startGame();
     }
 
@@ -55,7 +64,7 @@ public class MainMenu : MonoBehaviour
     public void changedVolume()
     {
         float volume = soundSlider.value / 100;
-        GameManager.Instance.volume = volume;
+        AudioManager.Instance.volume = volume;
         audioSource.volume = volume;
         StartCoroutine(playClip());
     }
@@ -70,6 +79,7 @@ public class MainMenu : MonoBehaviour
         mainMenu.SetActive(true);
         optionsMenu.SetActive(false);
         songSelectMenu.SetActive(false);
+
     }
 
     IEnumerator playClip()

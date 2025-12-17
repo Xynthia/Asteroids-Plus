@@ -11,7 +11,6 @@ public class RhythmManager : MonoBehaviour
 
     [SerializeField] private Beats[] beats;
 
-    [SerializeField] private  UnityEvent startOfMarginTrigger;
 
     public float beatDureationMs = 0.0f;
     public float beatDureationS = 0.0f;
@@ -48,31 +47,31 @@ public class RhythmManager : MonoBehaviour
 
     void Start()
     {
-        
+        foreach (SongData songData in AudioManager.Instance.songs)
+        {
+            if (AudioManager.Instance.bgAudio == songData.song)
+            {
+                marginDurationMs = songData.marginDurationMs;
+                marginDurationS = marginDurationMs / 1000;
 
+                bpm = songData.bpm;
+                beats[0].notesInBeat = songData.notesInBeat;
+                beatDureationS = beats[0].GetBeatLength(bpm);
+                beatDureationMs = beatDureationS * 1000;
+
+                lengthOfSongS = songData.song.length;
+                lengthOfSongMs = lengthOfSongS * 1000;
+            }
+        }
+        
     }
 
 
     private void Update()
     {
-        if(doThisOnce && AudioManager.Instance.BGAudioSource)
-        {
-            lengthOfSongMs = lengthOfSongS * 1000;
-
-            marginDurationS = marginDurationMs / 1000;
-
-            beatDureationS = beats[0].GetBeatLength(bpm);
-            beatDureationMs = beatDureationS * 1000;
-
-            doThisOnce = false;
-        }
-
         foreach (Beats beat in beats) {
-            
             if (AudioManager.Instance.BGAudioSource)
             {
-
-
                 sampleTimeS = (AudioManager.Instance.BGAudioSource.timeSamples / (AudioManager.Instance.BGAudioSource.clip.frequency * beatDureationS));
                 beat.CheckForNewBeat(sampleTimeS);
 
@@ -85,7 +84,6 @@ public class RhythmManager : MonoBehaviour
                 {
                     activeBeat = -1;
                     GameManager.Instance.isOnBeat = false;
-                    doThisOnce = true;
                 }
             }
         }
@@ -96,7 +94,6 @@ public class RhythmManager : MonoBehaviour
         nextBeatPosition += beatDureationMs;
         activeBeatStartPosition = sampleTimeS - marginDurationS;
         activeBeatEndPosition = sampleTimeS + marginDurationS;
-
     }
 
 
@@ -117,7 +114,7 @@ public class RhythmManager : MonoBehaviour
 [System.Serializable]
 public class Beats
 {
-    [SerializeField] private float notesInBeat;
+    [SerializeField] public float notesInBeat;
     [SerializeField] private UnityEvent trigger;
 
 

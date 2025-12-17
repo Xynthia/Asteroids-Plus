@@ -48,7 +48,7 @@ public class CircleManager : MonoBehaviour
     IEnumerator animationPartTwo()
     {
         StartCoroutine(changeScale(halfSize, minSize, timeToScale));
-        StartCoroutine(changeTransparency(Color.white, transparent, timeToScale * 2));
+        StartCoroutine(changeTransparency(Color.white, transparent, timeToScale));
 
         yield return new WaitForSeconds(timeToScale + 1);
     }

@@ -9,7 +9,12 @@ public class LengthSongUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentSongProgressBar.value = (RhythmManager.Instance.checkPercentagSong());
+        if (RhythmManager.Instance)
+        {
+            float newValue = RhythmManager.Instance.checkPercentagSong();
+
+            currentSongProgressBar.value = newValue;
+        }
 
     }
 
