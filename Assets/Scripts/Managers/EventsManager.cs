@@ -13,6 +13,7 @@ public class EventsManager : MonoBehaviour
     private string dialogTwo = "But of course this is asteroids~\r\nYou shoot when you move\r\n!Keep in mind!\r\nMovement gives you the most points";
     private string dialogThree = "Every action you take is based\r\non how well you time it.\r\nbetter rhythm == beter score!";
     private string dialogFour = "Asteroids... \r\nI TOTALLY FORGOT THE ASTEROIDS!\r\nShoot them get extra points~";
+    private string dialogFive = "Small extra: use 'p'for pause!";
 
 
     private bool eventOneDone = false;
@@ -27,7 +28,11 @@ public class EventsManager : MonoBehaviour
     private bool eventThreeDone = false;
     private float actionCounter = 0f;
 
+    private bool eventFourDone = false;
     private float eventFourTimer = 0f;
+
+    private float eventFiveTimer = 0f;
+
 
 
     private void Start()
@@ -81,6 +86,18 @@ public class EventsManager : MonoBehaviour
             eventFourTimer += Time.deltaTime;
 
             if (eventFourTimer >= 5)
+            {
+                eventFourDone = true;
+            }
+        }
+
+        if (eventFourDone)
+        {
+            dialog.text = dialogFive;
+
+            eventFiveTimer += Time.deltaTime;
+
+            if (eventFiveTimer >= 5)
             {
                 dialog.gameObject.SetActive(false);
             }

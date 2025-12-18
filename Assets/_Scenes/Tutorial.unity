@@ -873,10 +873,10 @@ RectTransform:
   - {fileID: 537783232}
   m_Father: {fileID: 1948653228}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.0125, y: 0.3}
-  m_AnchorMax: {x: 1, y: 0.70000005}
-  m_AnchoredPosition: {x: -2.2500167, y: 0}
-  m_SizeDelta: {x: -10.499967, y: 2}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 78.749985, y: 0}
+  m_SizeDelta: {x: 147.50003, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &394222316
 GameObject:
@@ -1163,7 +1163,7 @@ MonoBehaviour:
   bpm: 0
   marginDurationMs: 0
   marginDurationS: 0
-  marginTimerS: 0
+  nextBeatPosition: 0
   activeBeatStartPosition: 0
   activeBeatEndPosition: 0
 --- !u!4 &549402279
