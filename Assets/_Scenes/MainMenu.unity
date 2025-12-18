@@ -372,7 +372,7 @@ MonoBehaviour:
     song: {fileID: 8300000, guid: 435274e8a798a92499038bf257973663, type: 3}
     bpm: 90
     notesInBeat: 1
-    marginDurationMs: 320
+    marginDurationMs: 420
   - name: In Orbit
     song: {fileID: 8300000, guid: 1a70ff2b46af8de4a9056093e36a4b70, type: 3}
     bpm: 92
@@ -381,8 +381,8 @@ MonoBehaviour:
   - name: Hitting the Atmosphere
     song: {fileID: 8300000, guid: f75c17371497ad7419d6f3c7130fbb73, type: 3}
     bpm: 125
-    notesInBeat: 0.5
-    marginDurationMs: 320
+    notesInBeat: 0.585
+    marginDurationMs: 420
   deathStar:
     name: 
     song: {fileID: 0}
@@ -403,6 +403,7 @@ MonoBehaviour:
     marginDurationMs: 0
   hitAudio: {fileID: 8300000, guid: 51ffbe2f0d8c62b4d854d0736312e72c, type: 3}
   shootAudio: {fileID: 8300000, guid: e16aa4d2685d8744c9c6d17747b89329, type: 3}
+  doThisOnce: 1
 --- !u!4 &163265576
 Transform:
   m_ObjectHideFlags: 0

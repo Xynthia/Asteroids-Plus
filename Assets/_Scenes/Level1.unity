@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72d9453caa5358d48bda7d6eacf39516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SetObjectForGameManager
-  scoreTextObject: {fileID: 0}
+  scoreTextObject: {fileID: 1534033663}
   player: {fileID: 1126094786}
   visualScoreOnBeat: {fileID: 1360841898}
   bgAudioSource: {fileID: 2028123047}
@@ -526,7 +526,7 @@ MonoBehaviour:
   bpm: 0
   marginDurationMs: 0
   marginDurationS: 0
-  marginTimerS: 0
+  nextBeatPosition: 0
   activeBeatStartPosition: 0
   activeBeatEndPosition: 0
 --- !u!4 &549402279

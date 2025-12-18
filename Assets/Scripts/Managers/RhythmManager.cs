@@ -25,10 +25,9 @@ public class RhythmManager : MonoBehaviour
 
     public float marginDurationMs = 600f;
     public float marginDurationS = 0.0f;
-    public float marginTimerS = 0.0f;
 
 
-    private float nextBeatPosition = 0f;
+    public float nextBeatPosition = 0f;
     public float activeBeatStartPosition = 0f;
     public float activeBeatEndPosition = 0f;
 
@@ -56,9 +55,12 @@ public class RhythmManager : MonoBehaviour
                 beats[0].notesInBeat = songData.notesInBeat;
                 beatDureationS = beats[0].GetBeatLength(bpm);
                 beatDureationMs = beatDureationS * 1000;
+                nextBeatPosition += beatDureationS;
 
                 lengthOfSongS = songData.song.length;
                 lengthOfSongMs = lengthOfSongS * 1000;
+
+                
             }
         }
         
@@ -73,6 +75,9 @@ public class RhythmManager : MonoBehaviour
                 sampleTimeS = (AudioManager.Instance.BGAudioSource.timeSamples / (AudioManager.Instance.BGAudioSource.clip.frequency * beatDureationS));
                 beat.CheckForNewBeat(sampleTimeS);
 
+
+                
+
                 if (sampleTimeS >= activeBeatStartPosition && sampleTimeS <= activeBeatEndPosition)
                 {
                     activeBeat = beat.lastBeat;
@@ -85,20 +90,23 @@ public class RhythmManager : MonoBehaviour
                 }
             }
         }
+
+        
     }
 
     public void setNewMargin()
     {
-        nextBeatPosition += beatDureationMs;
-        activeBeatStartPosition = sampleTimeS - marginDurationS;
-        activeBeatEndPosition = sampleTimeS + marginDurationS;
+        nextBeatPosition = sampleTimeS + beatDureationS;
+        activeBeatStartPosition = nextBeatPosition - marginDurationS;
+        activeBeatEndPosition = nextBeatPosition + marginDurationS;
     }
 
 
     public float checkPercentagMargin()
     {
-        float currentMarginTime = activeBeatEndPosition - sampleTimeS;
-        return (currentMarginTime / marginDurationS) * 100;
+        float deel = sampleTimeS - activeBeatStartPosition;
+        float geheel = activeBeatEndPosition - activeBeatStartPosition;
+        return (deel / geheel) * 100;
     }
 
     public float checkPercentagSong()

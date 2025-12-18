@@ -8,7 +8,8 @@ public class CircleManager : MonoBehaviour
     private Vector3 minSize;
 
     private float scale = 3f;
-    private float timeToScale = 0.0f;
+    private float timeToScale = 0.000f;
+    private float timeToWait = 0.000f;
 
 
     private Color transparent = new Color(0f, 0f, 0f, 0f);
@@ -22,7 +23,10 @@ public class CircleManager : MonoBehaviour
 
         minSize = halfSize / scale;
 
-        timeToScale = RhythmManager.Instance.beatDureationS;
+
+        timeToWait = ((10.0f / 100.0f) * RhythmManager.Instance.marginDurationS) * 2;
+
+        timeToScale = (RhythmManager.Instance.beatDureationS - RhythmManager.Instance.marginDurationS) + timeToWait;
 
         StartCoroutine(startAnimation());
     }
@@ -42,7 +46,7 @@ public class CircleManager : MonoBehaviour
         StartCoroutine(changeScale( maxSize, halfSize, timeToScale));
         StartCoroutine(changeTransparency(transparent, Color.white, timeToScale));
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(timeToScale + timeToWait);
     }
 
     IEnumerator animationPartTwo()
@@ -50,7 +54,7 @@ public class CircleManager : MonoBehaviour
         StartCoroutine(changeScale(halfSize, minSize, timeToScale));
         StartCoroutine(changeTransparency(Color.white, transparent, timeToScale));
 
-        yield return new WaitForSeconds(timeToScale + 1);
+        yield return new WaitForSeconds(timeToScale + timeToWait);
     }
 
 

@@ -55,11 +55,10 @@ public class EventsManager : MonoBehaviour
         {
             dialog.text = dialogTwo;
             
-
             if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) && GameManager.Instance.isOnBeat)
                 shootCounter += 1;
 
-            if (shootCounter == 3)
+            if (shootCounter == 10)
                 eventTwoDone = true;
         }
         

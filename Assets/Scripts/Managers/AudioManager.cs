@@ -72,6 +72,8 @@ public class AudioManager : MonoBehaviour
             RhythmManager.Instance.lengthOfSongS = BGAudioSource.clip.length;
             RhythmManager.Instance.bpm = bpm;
 
+            
+
             changeVolume(volume);
 
             BGAudioSource.Play();

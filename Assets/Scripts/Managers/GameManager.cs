@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreTextObject = null;
     public TextMeshProUGUI visualScoreOnBeat;
     
-    private int score = 0;
+    public int score = 0;
     private float visualScoreTimer = 0f;
     private float visualScoreTime = 2f;
     private bool visualScoreOn = false;
@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
                 pressedOnceOnBeat = false;
             }
 
+            
 
             // visual score follows player goes off after visualscoretime.
             if (visualScoreOnBeat != null)
@@ -90,9 +91,9 @@ public class GameManager : MonoBehaviour
                 visualScoreTimer -= visualScoreTime;
                 scoreTextObject.gameObject.SetActive(false);
             }
-        }
 
-        Debug.Log(skipToSongSelect);
+            
+        }
     }
 
     public void NotifyPlayerDeath()
@@ -120,14 +121,20 @@ public class GameManager : MonoBehaviour
             scoreTextObject.text = "Score: " + score.ToString();
     }
 
+    public void setScore(int amount)
+    {
+        score = amount;
+    }
+
     public void playerPressedButton()
     {
         pressedOnceOnBeat = true;
 
         shoot();
+        CheckScore();
         playerMovement.move();
 
-        CheckScore();
+        
     }
 
     // add score based on precision
@@ -135,31 +142,38 @@ public class GameManager : MonoBehaviour
     {
         float percentageAfterBeat = RhythmManager.Instance.checkPercentagMargin();
 
-        if (percentageAfterBeat < 10){
+        if (percentageAfterBeat < 10 && percentageAfterBeat > 0)
+        {
             setVisualScore(visualScoreName.Early);
             AddScore(1);
         }
-        else if (percentageAfterBeat < 25){
+        else if (percentageAfterBeat < 25 && percentageAfterBeat > 10)
+        {
             setVisualScore(visualScoreName.Early);
             AddScore(2);
         }
-        else if (percentageAfterBeat < 45){
+        else if (percentageAfterBeat < 45 && percentageAfterBeat > 25)
+        {
             setVisualScore(visualScoreName.Good);
             AddScore(3);
         }
-        else if (percentageAfterBeat < 55){
+        else if (percentageAfterBeat < 55 && percentageAfterBeat > 45) 
+        {
             setVisualScore(visualScoreName.Perfect);
             AddScore(5);
         }
-        else if (percentageAfterBeat < 75){
+        else if (percentageAfterBeat < 75 && percentageAfterBeat > 55)
+        {
             setVisualScore(visualScoreName.Almost);
             AddScore(3);
         }
-        else if (percentageAfterBeat < 90){
+        else if (percentageAfterBeat < 90 && percentageAfterBeat > 75)
+        {
             setVisualScore(visualScoreName.Late);
             AddScore(2);
         }
-        else if (percentageAfterBeat < 100){
+        else if (percentageAfterBeat < 100 && percentageAfterBeat > 90)
+        {
             setVisualScore(visualScoreName.Late);
             AddScore(1);
         }

@@ -18,10 +18,16 @@ public class PlayerMovement : MonoBehaviour
     
     private bool isThrusting = false;
 
+    private float timeToMove = 0.000f;
+    private float timeToWait = 0.000f;
+
 
     private void Start()
     {
         body = GetComponent<Rigidbody>();
+
+
+        timeToMove = RhythmManager.Instance.marginDurationS / 2;
     }
 
     private void Update()
@@ -76,8 +82,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void move()
     {
-        StartCoroutine(changeRotation(body.rotation, newRotation, RhythmManager.Instance.marginDurationS));
-        StartCoroutine(changePosition(body.position, newPosition, RhythmManager.Instance.marginDurationS));
+        StartCoroutine(changeRotation(body.rotation, newRotation, timeToMove));
+        StartCoroutine(changePosition(body.position, newPosition, timeToMove));
     }
 
     IEnumerator changeRotation(Quaternion start, Quaternion end, float duration)

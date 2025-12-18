@@ -24,6 +24,8 @@ public class MainMenu : MonoBehaviour
     private void startGame()
     {
         GameManager.Instance.startedLevel = true;
+        GameManager.Instance.setScore(0);
+
         SceneManager.LoadScene("Level1");
     }
 
@@ -33,6 +35,8 @@ public class MainMenu : MonoBehaviour
         AudioManager.Instance.doThisOnce = true;
 
         GameManager.Instance.startedLevel = true;
+        GameManager.Instance.setScore(0);
+
         SceneManager.LoadScene("Tutorial");
     }
 
