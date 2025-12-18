@@ -13,7 +13,7 @@ public class MainMenu : MonoBehaviour
 
     private void Update()
     {
-        
+
         if (GameManager.Instance.skipToSongSelect)
         {
             songSelect();
@@ -30,6 +30,7 @@ public class MainMenu : MonoBehaviour
     public void deathStar()
     {
         AudioManager.Instance.bgAudio = AudioManager.Instance.deathStar.song;
+        AudioManager.Instance.doThisOnce = true;
 
         GameManager.Instance.startedLevel = true;
         SceneManager.LoadScene("Tutorial");
@@ -38,14 +39,16 @@ public class MainMenu : MonoBehaviour
     public void inOrbit()
     {
         AudioManager.Instance.bgAudio = AudioManager.Instance.inOrbit.song;
-        
+        AudioManager.Instance.doThisOnce = true;
+
         startGame();
     }
 
     public void hittingTheAtmosphere()
     {
         AudioManager.Instance.bgAudio = AudioManager.Instance.hittingTheAtmosphere.song;
-        
+        AudioManager.Instance.doThisOnce = true;
+
         startGame();
     }
 
@@ -79,6 +82,7 @@ public class MainMenu : MonoBehaviour
         mainMenu.SetActive(true);
         optionsMenu.SetActive(false);
         songSelectMenu.SetActive(false);
+        GameManager.Instance.skipToSongSelect = false;
 
     }
 

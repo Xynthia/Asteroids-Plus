@@ -27,14 +27,14 @@ public class AudioManager : MonoBehaviour
     public AudioClip hitAudio;
     public AudioClip shootAudio;
 
-    private bool doThisOnce = true;
+    public bool doThisOnce = true;
 
     private void Awake()
     {
         // setup singleton
         if (instance != null)
         {
-            Destroy(instance.gameObject);
+            Destroy(gameObject);
         }
         else
         {
@@ -77,7 +77,6 @@ public class AudioManager : MonoBehaviour
             BGAudioSource.Play();
 
             doThisOnce = false;
-
         }
     }
 

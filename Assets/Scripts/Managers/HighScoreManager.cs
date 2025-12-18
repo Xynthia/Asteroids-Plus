@@ -16,7 +16,7 @@ public class HighScoreManager : MonoBehaviour
         // setup singleton
         if (instance != null)
         {
-            Destroy(instance.gameObject);
+            Destroy(gameObject);
         }
         else
         {

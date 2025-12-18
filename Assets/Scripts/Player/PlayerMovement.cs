@@ -13,7 +13,6 @@ public class PlayerMovement : MonoBehaviour
     private Animator thrusterAnimator;
 
     private float moveDistance = 1f;
-    private float moveTime = 1f;
 
     private Quaternion newRotation;
     

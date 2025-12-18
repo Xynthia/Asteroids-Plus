@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
         // setup singleton
         if (instance != null)
         {
-            Destroy(instance.gameObject);
+            Destroy(gameObject);
         }
         else
         {
@@ -124,6 +124,7 @@ public class GameManager : MonoBehaviour
     {
         pressedOnceOnBeat = true;
 
+        shoot();
         playerMovement.move();
 
         CheckScore();
@@ -191,5 +192,11 @@ public class GameManager : MonoBehaviour
         }
 
         visualScoreOnBeat.gameObject.SetActive(true);
+    }
+
+    public void shoot()
+    {
+        PlayerGun gun =  player.GetComponent<PlayerGun>();
+        gun.Shoot();
     }
 }

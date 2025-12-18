@@ -32,8 +32,6 @@ public class RhythmManager : MonoBehaviour
     public float activeBeatStartPosition = 0f;
     public float activeBeatEndPosition = 0f;
 
-    private bool doThisOnce = true;
-
 
 
     private void Awake()
@@ -70,7 +68,7 @@ public class RhythmManager : MonoBehaviour
     private void Update()
     {
         foreach (Beats beat in beats) {
-            if (AudioManager.Instance.BGAudioSource)
+            if (AudioManager.Instance.BGAudioSource && GameManager.Instance.startedLevel)
             {
                 sampleTimeS = (AudioManager.Instance.BGAudioSource.timeSamples / (AudioManager.Instance.BGAudioSource.clip.frequency * beatDureationS));
                 beat.CheckForNewBeat(sampleTimeS);

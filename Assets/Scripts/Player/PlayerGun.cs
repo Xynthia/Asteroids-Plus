@@ -28,14 +28,14 @@ public class PlayerGun : MonoBehaviour
         // track cooldown between shots
         shootingCooldownTimer -= Time.deltaTime;
 
-        // shoot if pressing button and shooting not on cooldown
-        if (Input.GetKeyDown(KeyCode.Space) && shootingCooldownTimer <= 0 && GameManager.Instance.isOnBeat)
-        {
-            GameManager.Instance.playerPressedButton();
-            Shoot();
-        }
+        //// shoot if pressing button and shooting not on cooldown
+        //if (Input.GetKeyDown(KeyCode.Space) && shootingCooldownTimer <= 0 && GameManager.Instance.isOnBeat)
+        //{
+        //    GameManager.Instance.playerPressedButton();
+        //    Shoot();
+        //}
     }
-    private void Shoot()
+    public void Shoot()
     {
         // create bullet at bullet origin's location and rotation, and launch with speed
         GameObject bullet = GameObject.Instantiate(bulletPrefab, bulletOrigin.transform.position, bulletOrigin.transform.rotation);

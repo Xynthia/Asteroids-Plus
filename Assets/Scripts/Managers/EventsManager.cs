@@ -10,7 +10,7 @@ public class EventsManager : MonoBehaviour
     private float scale = 1.2f;
 
     private string dialogOne = "This game works on a rhythm!\r\nTry and see if you can move~\r\nuse W, A, S,D";
-    private string dialogTwo = "But of course this is asteroids~\r\ntry shooting a few times\r\nuse space";
+    private string dialogTwo = "But of course this is asteroids~\r\nYou shoot when you move\r\n!Keep in mind!\r\nMovement gives you the most points";
     private string dialogThree = "Every action you take is based\r\non how well you time it.\r\nbetter rhythm == beter score!";
     private string dialogFour = "Asteroids... \r\nI TOTALLY FORGOT THE ASTEROIDS!\r\nShoot them get extra points~";
 
@@ -29,7 +29,6 @@ public class EventsManager : MonoBehaviour
 
     private float eventFourTimer = 0f;
 
-    private bool doThisOnce = true;
 
     private void Start()
     {
@@ -57,7 +56,7 @@ public class EventsManager : MonoBehaviour
             dialog.text = dialogTwo;
             
 
-            if (Input.GetKeyDown(KeyCode.Space) && GameManager.Instance.isOnBeat)
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) && GameManager.Instance.isOnBeat)
                 shootCounter += 1;
 
             if (shootCounter == 3)
@@ -68,7 +67,7 @@ public class EventsManager : MonoBehaviour
         {
             dialog.text = dialogThree;
 
-            if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.Space)) && GameManager.Instance.isOnBeat)
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) && GameManager.Instance.isOnBeat)
                 actionCounter += 1;
 
             if (actionCounter == 10)
@@ -96,9 +95,6 @@ public class EventsManager : MonoBehaviour
             Vector3 end = dialog.transform.localScale * 1f;
             yield return StartCoroutine(changeScale(begin, mid, 0.2f));
             StartCoroutine(changeScale(mid, end, 0.2f));
-
-        
-
     }
 
     IEnumerator changeScale(Vector3 start, Vector3 end, float duration)
